@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>music store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background-color: yellow;
+            overflow-x: hidden;
+            height: 100%;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            pointer-events: none;
+            animation: overlayFadeIn 2s ease-in-out;
+        }
+
+        @keyframes overlayFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 0.5;
+            }
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.2);
+            ;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .menu-items {
+            display: flex;
+            justify-content: center;
+        }
+
+        .menu-items a {
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .menu-icon {
+                display: block;
+                position: absolute;
+                top: 10px;
+                right: 20px;
+            }
+
+            .menu-items {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .menu-items a {
+                margin: 10px 0;
+            }
+
+            .menu-items.active {
+                display: flex;
+            }
+        }
+
+        section {
+            margin: 20px 0;
+        }
+
+        .product,
+        .faq,
+        .testimonial,
+        .contact-form,
+        .social-media,
+        .location,
+        .info {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            animation: contentFadeIn 2s ease-in-out;
+        }
+
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product {
+            background-color: rgba(5, 5, 5, 0.089);
+        }
+
+        .product img {
+            max-width: 100%;
+        }
+
+        footer {
+            background: rgba(5, 5, 5, 0.089);
+            padding: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 10px;
+            }
+
+            nav {
+                padding: 5px;
+            }
+
+            .product,
+            .faq,
+            .testimonial,
+            .contact-form,
+            .social-media,
+            .location,
+            .info {
+                padding: 10px;
+            }
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .testimonial {
+            background-color: rgba(5, 5, 5, 0.089);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial p {
+            margin: 0;
+        }
+
+        .testimonial em {
+            font-style: normal;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: rgb(245, 68, 3);
+            /* Vermelho */
+            color: white;
+            /* White */
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: rgb(13, 149, 136);
+            /* Azul mais claro ao passar o mouse */
+        }
+
+        .rating {
+            font-size: 24px;
+            color: rgba(5, 5, 5, 0.089);
+            /* Cor das estrelas */
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .rating label:before {
+            content: '\2605';
+            /* Código Unicode da estrela vazia */
+        }
+
+        .rating input:checked~label:before {
+            content: '\2605';
+            /* Código Unicode da estrela preenchida */
+        }
+
+        .rating {
+            font-size: 24px;
+            color: yellow;
+            /* Cor das estrelas */
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .rating label:before {
+            content: '\2605';
+            /* Código Unicode da estrela vazia */
+        }
+
+        .rating input:checked~label:before {
+            content: '\2605';
+            /* Código Unicode da estrela preenchida */
+        }
+
+        /* Video de fundo */
+        .background-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            opacity: 0.7;
+            /* Ajuste a opacidade conforme necessário */
+        }
+
+        footer {
+            background-color: rgba(5, 5, 5, 0.089);
+            ;
+            /* Cor de fundo do footer (preto, por exemplo) */
+            color: #fff;
+            /* Cor do texto (branco) */
+            text-align: center;
+            /* Centralizar texto */
+            padding: 20px;
+            /* Espaçamento interno */
+        }
+
+        #special-offers,
+        #faq,
+        #contact {
+            background-color: rgba(5, 5, 5, 0.089);
+        }
+
+        .footer-bottom {
+            background-color: ;
+            /* Adicione esta linha se quiser um fundo específico para o rodapé */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+
+
+        form {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: rgba(5, 5, 5, 0.089);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(5, 5, 5, 0.089);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: red;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<script>
+    function toggleMenu() {
+        var menuItems = document.getElementById('menuItems');
+        menuItems.classList.toggle('active');
+    }
+</script>
+
+<body>
+    <!-- Video de fundo -->
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="assets/olhar.mp4" type="video/mp4">
+        Seu navegador não suporta a tag de vídeo.
+    </video>
+
+    <nav class="content">
+        <div class="menu-icon" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="menu-items" id="menuItems">
+            <a href="about.html"><i class="fas fa-home"></i> Sobre Nós</a>
+            <a href="#products"><i class="fas fa-box"></i> Produtos</a>
+            <a href="#special-offers"><i class="fas fa-tags"></i> Ofertas Especiais</a>
+            <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="#testimonials"><i class="fas fa-comment-alt"></i> Depoimentos</a>
+            <a href="#Location"><i class="fas fa-map-marker-alt"></i> Localização</a>
+            <a href="#contact"><i class="fas fa-envelope"></i> Contato</a>
+        </div>
+    </nav>
+    <script src="scripts.js"></script>
+
+    <div class="content">
+        <section id="home">
+            <h1>Hair saloon</h1>
+            <p></p>
+        </section>
+       
+        <section id="products">
+
+            <div class="product">
+                <h2>Polite</h2>
+                <img src="assets/" alt="">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Price: R$ 25.00</p>
+                <p>Discount: 5%</p>
+                <p>Discounted price: R$23.75</p>
+                <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido."
+                    class="cta-button">Comprar Agora</a>
+            </div>
+            <br>
+            <br>
+
+            <div class="product">
+                <h2>Polite</h2>
+                <img src="assets/" alt="">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Price: R$ 19.99</p>
+                <p>Discount: 10%</p>
+                <p>Discounted price: R$17.99</p>
+                <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido."
+                    class="cta-button">Comprar Agora</a>
+            </div>
+            <br>
+            <br>
+
+            <div class="product">
+                <h2>Polite</h2>
+                <img src="assets/" alt="">
+                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Price: R$ 12.00</p>
+                <p>Discount: 0%</p>
+                <p>Discounted price: R$ 12.00</p>
+                <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido."
+                    class="cta-button">Comprar Agora</a>
+            </div>
+            <br>
+            <br>
+
+            <div class="product">
+                <h2>Polite</h2>
+                <img src="assets/" alt="">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Price: R$ 10.00</p>
+                <p>Discount: 0%</p>
+                <p>Discounted price: R$ 10.00</p>
+                <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido."
+                    class="cta-button">Comprar Agora</a>
+            </div>
+            <br>
+            <br>
+
+            <div class="product">
+                <h2>Polite<h2>
+                <img src="assets/" alt="">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Price: R$ 25.00</p>
+                <p>Discount: 5%</p>
+                <p>Discounted price: R$23.75</p>
+                <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido."
+                    class="cta-button">Comprar Agora</a>
+            </div>
+            <br>
+            <br>
+
+            <div class="product">
+                <h2>Polite</h2>
+                <img src="assets/" alt="">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Price: R$ 19.99</p>
+                <p>Discount: 10%</p>
+                <p>Discounted price: R$17.99</p>
+                <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido."
+                    class="cta-button">Comprar Agora</a>
+            </div>
+            <br>
+            <br>
+
+        <form action="https://api.staticforms.xyz/submit" method="post">
+            <input type="text" name="name" placeholder="Your Name">
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="text" name="phone" placeholder="Your Phone">
+            <input type="text" name="company" placeholder="Your Company">
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <input type="text" name="honeypot" style="display:none">
+            <input type="hidden" name="accessKey" value="11d0b5ed-df07-4c34-ad75-45ea3e034c56">
+            <input type="hidden" name="subject" value="Contact Form Submission">
+            <input type="hidden" name="replyTo" value="">
+            <input type="hidden" name="redirectTo" value="https://example.com/contact/success">
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <br>
+
+        <section id="Location">
+            <h2>Nossa Localização</h2>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15011.292141156985!2d-122.0843372!3d37.4223663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085806ae88fb55d%3A0xf8df5647f047ee56!2sGolden%20Gate%20Bridge!5e0!3m2!1sen!2sus!4v1614354140015!5m2!1sen!2sus"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </section>
+        <br>
+        <br>
+
+        <section id="testimonials">
+            <h2>Testimonials</h2>
+            <div class="testimonial">
+                <p><em>— João S., Cliente Satisfeito</em></p>
+                <p>"O atendimento aqui é fantástico! A equipe me ajudou a encontrar o corte perfeito, e eu não poderia estar mais feliz com o resultado."</p>
+            </div>
+            
+            <div class="testimonial">
+                <p><em>— Maria P., Cliente Fiel</em></p>
+                <p>"Comprei meus produtos de cabelo favoritos aqui e a experiência foi maravilhosa. A equipe foi muito atenciosa e me guiou durante todo o processo."</p>
+            </div>
+            
+            <div class="testimonial">
+                <p><em>— André M., Fã de Cabelos Bem Cuidados</em></p>
+                <p>"Os tratamentos capilares deste salão são de primeira linha. A expertise da equipe realmente fez a diferença na escolha do melhor tratamento para mim."</p>
+            </div>
+            
+            <div class="testimonial">
+                <p><em>— Laura T., Cliente Regular</em></p>
+                <p>"Encontrar um salão de qualidade pode ser desafiador, mas a seleção de serviços e o atendimento no Salão Beleza Pura tornaram tudo mais fácil. Altamente recomendado!"</p>
+            </div>
+            
+            <div class="testimonial">
+                <p><em>— Lucas R., Professor de Estilo</em></p>
+                <p>"Como professor de estilo, sempre recomendo o Salão Beleza Pura aos meus alunos. Eles oferecem ótimos cortes e um excelente atendimento ao cliente."</p>
+            </div>
+            
+            <div class="testimonial">
+                <p><em>— Sofia L., Produtora de Moda</em></p>
+                <p>"A seleção de produtos e acessórios para cabelo é impressionante. Este salão é um ponto único para todas as minhas necessidades de estilo."</p>
+            </div>
+            
+            <div class="testimonial">
+                <p><em>— Pedro C., Barbeiro Apreciador</em></p>
+                <p>"Já fiz vários cortes de cabelo aqui, e cada experiência foi excepcional. A variedade e a qualidade são incomparáveis."</p>
+            </div>
+            
+        </section>
+        <br>
+
+        <div class="rating">
+            <input type="radio" id="star9" name="rating" value="9">
+            <label for="star9">&#9733;</label>
+            <input type="radio" id="star8" name="rating" value="8">
+            <label for="star8">&#9733;</label>
+            <input type="radio" id="star7" name="rating" value="7">
+            <label for="star7">&#9733;</label>
+            <input type="radio" id="star6" name="rating" value="6">
+            <label for="star6">&#9733;</label>
+            <input type="radio" id="star5" name="rating" value="5">
+            <label for="star5">&#9733;</label>
+            <input type="radio" id="star9" name="rating" value="9">
+            <label for="star9">&#9733;</label>
+            <input type="radio" id="star8" name="rating" value="8">
+            <label for="star8">&#9733;</label>
+            <input type="radio" id="star7" name="rating" value="7">
+            <label for="star7">&#9733;</label>
+            <input type="radio" id="star6" name="rating" value="6">
+            <label for="star6">&#9733;</label>
+            <input type="radio" id="star5" name="rating" value="5">
+            <label for="star5">&#9733;</label>
+        </div>
+        <br>
+
+        <section id="special-offers" class="info">
+            <h2>Ofertas Especiais</h2>
+            <div class="offer-item">
+                <h3>Special Weekend: 20% Discount</h3>
+                <p>Enjoy a 20% discount on all orders placed during weekends. Don't miss this limited time offer!</p>
+            </div>
+            <br>
+            <br>
+            <div class="offer-item">
+                <h3>Oferta Especial: Corte + Tratamento</h3>
+                <p>Faça um corte de cabelo e ganhe um tratamento capilar gratuito por apenas R$150,00. Perfeito para quem deseja renovar o visual!</p>
+            </div>  
+            <br>
+            <br>
+            <div class="offer-item">
+                <h3>Happy Hour: Buy One, Get Two</h3>
+                <p>Join happy hour every weekday from 5pm to 7pm and take advantage of the buy one, tier two offer on select items.</p>
+            </div>
+        </section>
+        
+        <section id="faq" class="faq">
+            <h2>FAQ (Perguntas Frequentes)</h2>
+            <div class="faq-item">
+                <h3>What are your delivery hours?</h3>
+                <p>We deliver from 11:00 AM to 10:00 PM, Monday through Sunday.</p>
+            </div>
+            <br>
+            <br>
+            <div class="faq-item">
+                <h3>What is your delivery radius?</h3>
+                <p>We deliver within a 5 km radius from our location.</p>
+            </div>
+            <br>
+            <br>
+            <div class="faq-item">
+                <h3>Do you offer vegetarian options?</h3>
+                <p>Yes, we have a variety of vegetarian options available on our menu.</p>
+            </div>
+            <br>
+            <br>
+            <div class="faq-item">
+                <h3>How can I place an order?</h3>
+                <p>You can place an order by clicking on the "Comprar Agora" button next to each product or by contacting us via WhatsApp at 
+                    <a href="https://api.whatsapp.com/send?phone=13981430940&text=Olá! Gostaria de fazer um pedido.">(13) 98143-0940</a>
+                </p>
+            </div>
+            <br>
+            <br>
+            <div class="faq-item">
+                <h3>Do you cater for events?</h3>
+                <p>Yes, we provide catering services for events. Please contact us to discuss your event and menu options.</p>
+            </div>
+        </section>
+        
+        <section id="contact" class="info">
+            <h2>Contact Us</h2>
+            <div class="contact-item">
+                <p>WhatsApp: <a href="tel:+5513981430940">(13) 98143-0940</a></p>
+            </div>
+        </section>
+        
+        <footer>
+            <div class="footer-content">
+                <div class="footer-item">
+                    <h3>Opening Hours</h3>
+                    <p>Monday - Sunday: 11:00 AM - 10:00 PM</p>
+                    <br>
+                </div>
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/hotdog"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/hotdog"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/hotdog"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/hotdog"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://t.me/hotdog"><i class="fab fa-telegram"></i></a>
+                    <a href="https://www.youtube.com/hotdog"><i class="fab fa-youtube"></i></a>
+                    <a href="https://wa.me/1234567890"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://m.me/hotdog"><i class="fab fa-facebook-messenger"></i></a>
+                    <a href="https://open.spotify.com/user/hotdog"><i class="fab fa-spotify"></i></a>
+                </div>
+                <br>
+                <div class="footer-item">
+                    <h3>Delivery Area</h3>
+                    <p>We deliver within a 5 km radius.</p>
+                </div>
+            </div>
+        </footer>
+        
+        
+    <script>
+        menuToggle.addEventListener('click', function () {
+            navMenu.classList.toggle('active');
+            menuToggle.classList.toggle('open');
+        });
+
+        menuToggle.addEventListener('mouseover', function () {
+            menuToggle.style.transform = 'rotate(90deg)';
+        });
+
+        menuToggle.addEventListener('mouseout', function () {
+            menuToggle.style.transform = 'rotate(0deg)';
+        });
+    </script>
+
+<footer>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Music Store Harmony - All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
